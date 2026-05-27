@@ -4,6 +4,8 @@ from random import Random
 import helper
 
 board = ['-','-','-','-','-','-','-','-','-']
+wins =[[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+winningLine:list[int] = []
 turn = 0
 diff:int = 10
 
@@ -35,10 +37,14 @@ def startGame(playerStarting:bool):
 def gameStep(isTurn:bool):
     global turn, board
     turn += 1
+    if turn == 10:
+        print("Game was a draw")
+        initGame()
+        return
+
     if isTurn:
         match diff:
             case 10:
-                print("happened1")
                 i = Random().randint(0, 9 - turn) #9 possible squares, with 0-based indexing. Turn 1 means 0-8. Is inclusive
                 for j in range(0,9):
                     if board[j] == '-':
@@ -59,11 +65,34 @@ def gameStep(isTurn:bool):
                 board[i] = 'o' if turn % 2 == 1 else 'x'
                 break
     # check if game over
-    gameStep(not isTurn)
+    if hasWon():
+        if isTurn: print("The AI has won the game")
+        else: print("The human has won the game")
+        for i in range(len(winningLine)):
+            board[winningLine[i]].capitalize()
+        printBoard()
+        main()
+        #send to stats
+    else: gameStep(not isTurn)
 
 def printBoard():
     a, b, c = board[0:3], board[3:6], board[6:9]
     print(a, b, c, sep='\n')
+
+def hasWon():
+    global winningLine
+    for con in wins:
+        player = con[0]
+        match = 0
+        for i in con:
+            if board[i] == player: match += 1
+            else: break
+        if (match == 3): 
+            winningLine = con
+            return True
+    return False
+
+            
 
 
 main()
