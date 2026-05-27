@@ -71,7 +71,7 @@ def gameStep(isTurn:bool):
         if isTurn: print("The AI has won the game")
         else: print("The human has won the game")
         for i in range(len(winningLine)):
-            board[winningLine[i]].capitalize()
+            board[winningLine[i]] = board[winningLine[i]].capitalize()
         printBoard()
         main()
         #send to stats
@@ -84,9 +84,10 @@ def printBoard():
 def hasWon():
     global winningLine
     for con in wins:
-        player = con[0]
+        player = board[con[0]]
         match = 0
         for i in con:
+            if board[i] == '-': break
             if board[i] == player: match += 1
             else: break
             if (match == 3): 
