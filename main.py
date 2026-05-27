@@ -39,6 +39,7 @@ def gameStep(isTurn:bool):
     turn += 1
     if turn == 10:
         print("Game was a draw")
+        printBoard()
         initGame()
         return
 
@@ -64,6 +65,7 @@ def gameStep(isTurn:bool):
             if board[i] == '-':
                 board[i] = 'o' if turn % 2 == 1 else 'x'
                 break
+            else: print(f"Tile ({x}, {y}) has already been chosen")
     # check if game over
     if hasWon():
         if isTurn: print("The AI has won the game")
@@ -87,9 +89,9 @@ def hasWon():
         for i in con:
             if board[i] == player: match += 1
             else: break
-        if (match == 3): 
-            winningLine = con
-            return True
+            if (match == 3): 
+                winningLine = con
+                return True
     return False
 
             
