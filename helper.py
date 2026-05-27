@@ -2,7 +2,7 @@ resp = {'n': 0, 'y': 1, 'r': 2, 'e': 10, 'm': 11, 'h': 12}
 
 def getTextInput(msg:str, opts:set[int])->int:
     while True:
-        rtn:str = input(msg).lower()
+        rtn:str = input(msg).strip().lower()
         if rtn in resp:
             if (x := resp[rtn]) in opts:
                 return x
@@ -10,7 +10,7 @@ def getTextInput(msg:str, opts:set[int])->int:
 
 def getCoordInput(msg:str)->tuple[int, int]:
     while True:
-        rtn:str = input(msg)
+        rtn:str = input(msg).strip()
         if len(rtn) == 3:
             a, b = int(rtn[0]), int(rtn[2])
             if a or b <= 3 and a or b >= 1:
