@@ -54,7 +54,28 @@ def gameStep(isTurn:bool):
                             break
                         else: i -= 1
             case 11:
-                None
+                hasPlaced = False
+                for i in range(9):
+                    testBoard = board.copy()
+                    if board[i] == '-':
+                        testBoard[i] = 'o' if turn % 2 == 1 else 'x' #checks if can win first
+                        r= hasWon(testBoard)
+                        if r == 1:
+                            hasPlaced = True
+                            board[i] = 'o' if turn % 2 == 1 else 'x'; break
+                        testBoard[i] = 'x' if turn % 2 == 1 else 'o' #if can't win checks if other player can win
+                        r = hasWon(testBoard)
+                        if r == 2:
+                            hasPlaced = True
+                            board[i] = 'x' if turn % 2 == 0 else 'o'; break
+                if not hasPlaced: #if it and the player can't win the place in a random blank square
+                    i = Random().randint(0, 9 - turn) #9 possible squares, with 0-based indexing. Turn 1 means 0-8. Is inclusive
+                    for j in range(0,9):
+                        if board[j] == '-':
+                            if i == 0:
+                                board[j] = 'o' if turn % 2 == 1 else 'x'
+                                break
+                            else: i -= 1          
             case 12:
                 None
     else:
@@ -67,33 +88,34 @@ def gameStep(isTurn:bool):
                 break
             else: print(f"Tile ({x}, {y}) has already been chosen")
     # check if game over
-    if hasWon():
+    if hasWon(board) != 0:
         if isTurn: print("The AI has won the game")
         else: print("The human has won the game")
         for i in range(len(winningLine)):
             board[winningLine[i]] = board[winningLine[i]].capitalize()
         printBoard()
         main()
-        #send to stats
+        #send to statsn
+
     else: gameStep(not isTurn)
 
 def printBoard():
     a, b, c = board[0:3], board[3:6], board[6:9]
     print(a, b, c, sep='\n')
 
-def hasWon():
+def hasWon(testBoard)->int:
     global winningLine
     for con in wins:
-        player = board[con[0]]
+        player = testBoard[con[0]]
         match = 0
         for i in con:
-            if board[i] == '-': break
-            if board[i] == player: match += 1
+            if testBoard[i] == '-': break
+            if testBoard[i] == player: match += 1
             else: break
-            if (match == 3): 
-                winningLine = con
-                return True
-    return False
+        if (match == 3): 
+            winningLine = con
+            return 1 if player == 'o' else 2
+    return 0
 
             
 
